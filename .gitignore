@@ -1,0 +1,12 @@
+node_modules/
+dist/
+.env
+.env.*
+!.env.example
+.webapp-logs/
+*.log
+.DS_Store
+
+# Guias internas de construção do scaffold — não fazem parte do projeto.
+AGENT.md
+todo.md

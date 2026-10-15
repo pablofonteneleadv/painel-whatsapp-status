@@ -1,0 +1,189 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+/* Tailwind v4 is CSS-first: no tailwind.config / postcss / autoprefixer.
+   Dark mode is class-based (add `dark` on <html>/<body>); shadcn/ui token set.
+
+   ── Palette ─────────────────────────────────────────────────────────────
+   The panel is a WhatsApp-operations console: ink-dark surfaces, emerald as
+   the single brand accent, and a warm neutral for text so the interface reads
+   as a tool rather than a blank template. Light mode is the same system
+   inverted, not a different design. */
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  --radius: 0.875rem;
+
+  /* Light: warm paper, deep ink text, emerald accent. */
+  --background: hsl(160 20% 97%);
+  --foreground: hsl(200 42% 10%);
+  --card: hsl(0 0% 100%);
+  --card-foreground: hsl(200 42% 10%);
+  --primary: hsl(168 78% 28%);
+  --primary-foreground: hsl(0 0% 100%);
+  --secondary: hsl(166 20% 93%);
+  --secondary-foreground: hsl(200 38% 16%);
+  --muted: hsl(166 18% 94%);
+  --muted-foreground: hsl(200 12% 42%);
+  --accent: hsl(165 44% 91%);
+  --accent-foreground: hsl(168 74% 20%);
+  --destructive: hsl(4 68% 46%);
+  --destructive-foreground: hsl(0 0% 100%);
+  --success: hsl(152 62% 34%);
+  --success-foreground: hsl(0 0% 100%);
+  --warning: hsl(35 88% 42%);
+  --warning-foreground: hsl(0 0% 100%);
+  --border: hsl(166 16% 87%);
+  --input: hsl(166 16% 87%);
+  --ring: hsl(168 78% 32%);
+}
+
+.dark {
+  /* Dark (default): #0B141A ink, emerald accent, warm greys for depth. */
+  --background: hsl(200 30% 7%);
+  --foreground: hsl(160 14% 94%);
+  --card: hsl(199 27% 10%);
+  --card-foreground: hsl(160 14% 94%);
+  --primary: hsl(168 72% 34%);
+  --primary-foreground: hsl(160 30% 98%);
+  --secondary: hsl(199 22% 15%);
+  --secondary-foreground: hsl(160 12% 92%);
+  --muted: hsl(199 20% 15%);
+  --muted-foreground: hsl(168 9% 64%);
+  --accent: hsl(170 44% 18%);
+  --accent-foreground: hsl(158 60% 88%);
+  --destructive: hsl(4 60% 50%);
+  --destructive-foreground: hsl(0 0% 100%);
+  --success: hsl(152 62% 44%);
+  --success-foreground: hsl(160 40% 8%);
+  --warning: hsl(38 88% 58%);
+  --warning-foreground: hsl(30 60% 10%);
+  --border: hsl(199 20% 18%);
+  --input: hsl(199 20% 20%);
+  --ring: hsl(168 72% 40%);
+}
+
+/* Map design tokens to Tailwind's theme so utilities (bg-primary, border-border,
+   rounded-lg, …) resolve. @theme inline references the vars above unwrapped. */
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  /* Dark is the default: index.html ships `class="dark"` on <html>, and the
+     class-based variant above reads it. Tailwind v4 has no `dark` utility to
+     @apply here — the class on the element is what selects the token block. */
+  html {
+    color-scheme: dark;
+  }
+  html:not(.dark) {
+    color-scheme: light;
+  }
+  html:not(.dark) body {
+    background-color: var(--background);
+  }
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-family: var(--font-sans);
+    /* A quiet emerald bloom keeps the ink background from reading as flat black. */
+    background-image: radial-gradient(
+      90rem 40rem at 12% -10%,
+      color-mix(in oklab, hsl(168 72% 34%) 12%, transparent),
+      transparent 60%
+    );
+    background-attachment: fixed;
+  }
+
+  /* ── Type hierarchy: four visible levels ─────────────────────────────────
+     1. display  — page titles     2. heading — section titles
+     3. body     — content         4. caption — labels, meta, hints            */
+  h1,
+  .text-display {
+    @apply text-3xl font-semibold tracking-tight sm:text-[2.1rem];
+    line-height: 1.12;
+  }
+  h2,
+  .text-heading {
+    @apply text-lg font-semibold tracking-tight;
+  }
+  h3,
+  .text-subheading {
+    @apply text-sm font-semibold uppercase;
+    letter-spacing: 0.08em;
+  }
+  .text-caption {
+    @apply text-xs;
+    letter-spacing: 0.01em;
+  }
+  .text-body {
+    @apply text-sm leading-relaxed;
+  }
+  code,
+  .font-mono {
+    font-family: var(--font-mono);
+  }
+  /* Numbers in counters must not jitter as they change. */
+  .tabular {
+    font-variant-numeric: tabular-nums;
+  }
+  ::selection {
+    background: color-mix(in oklab, hsl(168 72% 34%) 40%, transparent);
+  }
+}
+
+@layer components {
+  /* Shared surface for the repeated panel pattern. */
+  .panel {
+    @apply rounded-xl border border-border bg-card/80 backdrop-blur-sm;
+  }
+
+  /* Focus ring consistent across every interactive element. */
+  .focus-ring {
+    @apply outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background;
+  }
+}
+
+@keyframes pulse-ring {
+  0% {
+    box-shadow: 0 0 0 0 color-mix(in oklab, hsl(152 62% 44%) 55%, transparent);
+  }
+  70% {
+    box-shadow: 0 0 0 6px color-mix(in oklab, hsl(152 62% 44%) 0%, transparent);
+  }
+  100% {
+    box-shadow: 0 0 0 0 color-mix(in oklab, hsl(152 62% 44%) 0%, transparent);
+  }
+}
+
+.live-dot {
+  animation: pulse-ring 2.2s ease-out infinite;
+}
